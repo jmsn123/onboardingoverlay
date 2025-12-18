@@ -1,0 +1,181 @@
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: transparent;  /* Fully transparent */
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+    
+    .overlay-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.1);  /* Slight tint so you can see it */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;  /* This is KEY - makes background click-through */
+    }
+    
+    .chat-container {
+      width: 800px;
+      max-width: 90vw;
+      height: 600px;
+      max-height: 80vh;
+      background: rgba(30, 30, 30, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      pointer-events: auto;  /* This is KEY - makes chat clickable */
+    }
+    
+    .header {
+      padding: 20px 30px;
+      background: rgba(40, 40, 40, 0.95);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .title {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .control-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .messages {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .message {
+      padding: 14px 18px;
+      border-radius: 12px;
+      max-width: 75%;
+      word-wrap: break-word;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    
+    .message.user {
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      align-self: flex-end;
+    }
+    
+    .message.assistant {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e5e5e5;
+      align-self: flex-start;
+    }
+    
+    .input-area {
+      padding: 20px 30px;
+      background: rgba(40, 40, 40, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .input-container {
+      display: flex;
+      gap: 12px;
+    }
+    
+    #messageInput {
+      flex: 1;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+    }
+    
+    #messageInput:focus {
+      border-color: rgba(59, 130, 246, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    
+    #sendBtn {
+      padding: 14px 28px;
+      background: rgba(59, 130, 246, 0.8);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    #sendBtn:hover {
+      background: rgba(59, 130, 246, 1);
+    }
+    
+    #sendBtn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .status {
+      padding: 6px 0;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.4);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+  

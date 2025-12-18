@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   minimizeOverlay: () => ipcRenderer.invoke('minimize-overlay'),
   getState: () => ipcRenderer.invoke('get-state'),
   sendMessage: (message) => ipcRenderer.invoke('send-message', message),
-  toggleFullscreen: () => ipcRenderer.invoke('toggle-fullscreen')  // ADD THIS
+  toggleFullscreen: () => ipcRenderer.invoke('toggle-fullscreen')  ,
+  setMousePassthrough: (passthrough) => ipcRenderer.invoke('set-mouse-passthrough', passthrough)  
 
 });
