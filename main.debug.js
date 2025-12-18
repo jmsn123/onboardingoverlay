@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu, ipcMain, globalShortcut } = require('electron');
+const { app, BrowserWindow, Tray, Menu, ipcMain, globalShortcut,screen } = require('electron');
 const path = require('path');
 
 // ============================================
@@ -19,6 +19,23 @@ console.log('======================================\n');
 // Window references
 let tray = null;
 let overlayWindow = null;
+
+
+
+function getExternalDisplay() {
+  const displays = screen.getAllDisplays();
+  
+  // Find external display (not the primary one)
+  const externalDisplay = displays.find((display) => {
+    return display.bounds.x !== 0 || display.bounds.y !== 0;
+  });
+  
+  // If found, return it. Otherwise return primary display
+  return externalDisplay || screen.getPrimaryDisplay();
+}
+
+
+
 
 // Simple mock LLM (no dependencies)
 async function getLLMResponse(message) {
@@ -64,13 +81,25 @@ function createOverlay() {
   console.log('📍 Creating overlay window...');
   
   try {
+
+  const targetDisplay = getExternalDisplay();
+    const { x, y, width, height } = targetDisplay.bounds;
+    
+    console.log('📺 Creating overlay on display:', {
+      x, y, width, height,
+      primary: targetDisplay === screen.getPrimaryDisplay()
+    });
+
     overlayWindow = new BrowserWindow({
-  
+      x,
+      y,
       fullscreen: true,
       frame: false,
       transparent: true,
       simpleFullscreen:true,
       alwaysOnTop: true,
+      hasShadow: false,
+      backgroundColor:undefined,
       resizable: false,
       skipTaskbar: true,
       show: false, // Don't show until ready
@@ -110,6 +139,9 @@ function createOverlay() {
       console.error('✗ Failed to load overlay.html:', error);
       console.error('  Make sure overlay.html exists in:', __dirname);
     });
+      overlayWindow.setIgnoreMouseEvents(true, { forward: true });
+
+
     
     overlayWindow.on('closed', () => {
       console.log('🗑️  Overlay window closed');
@@ -117,8 +149,9 @@ function createOverlay() {
     });
     
     // Initially hidden
-    overlayWindow.hide();
-    
+    // overlayWindow.hide();
+    overlayWindow.maximize(); // ← Use this instead of fullscreen: true
+
   } catch (error) {
     console.error('✗ Overlay creation failed:', error);
   }
@@ -143,10 +176,20 @@ function toggleOverlay() {
     }
   }
 }
-
+function toggleClickThrough() {
+  if (overlayWindow) {
+    clickThroughEnabled = !clickThroughEnabled;
+    overlayWindow.setIgnoreMouseEvents(clickThroughEnabled, { forward: true });
+    overlayWindow.webContents.send('click-through-changed', clickThroughEnabled);
+  }
+}
 // IPC Handlers
 console.log('📍 Registering IPC handlers...');
-
+ipcMain.handle('set-mouse-passthrough', (event, passthrough) => {
+  if (overlayWindow) {
+    overlayWindow.setIgnoreMouseEvents(passthrough, { forward: true });
+  }
+})
 ipcMain.handle('minimize-overlay', () => {
   console.log('🔽 IPC: minimize-overlay');
   if (overlayWindow) overlayWindow.hide();
@@ -159,6 +202,7 @@ ipcMain.handle('get-state', () => {
     bounds: overlayWindow ? overlayWindow.getBounds() : null
   };
 });
+
 
 ipcMain.handle('send-message', async (event, message) => {
   console.log('💬 IPC: send-message');
@@ -175,16 +219,34 @@ ipcMain.handle('send-message', async (event, message) => {
   }
 });
 
-console.log('✓ IPC handlers registered\n');
+ipcMain.handle('toggle-click-through', () => {
+  toggleClickThrough();
+  return clickThroughEnabled;
+});
+
 
 // App Lifecycle
-console.log('📍 Setting up app lifecycle...\n');
-
+// Move to specific display
+ipcMain.handle('move-to-display', async (event, displayId) => {
+  try {
+    if (!overlayWindow || overlayWindow.isDestroyed()) return false;
+    
+    const displays = screen.getAllDisplays();
+    const targetDisplay = displays.find(d => d.id === displayId);
+    
+    if (targetDisplay) {
+      const { x, y, width, height } = targetDisplay.bounds;
+      overlayWindow.setBounds({ x, y, width, height });
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('❌ Move to display failed:', error);
+    return false;
+  }
+});
 app.on('ready', () => {
-  console.log('🚀 App is READY!');
-  console.log('======================================\n');
-  
-  console.log('📍 Initializing components...\n');
+
   
   createTray();
   createOverlay();
@@ -192,23 +254,23 @@ app.on('ready', () => {
   // Register global shortcut
   console.log('📍 Registering hotkey...');
   const hotkey = 'CommandOrControl+Shift+A';
+  const hotkey2 = 'F8';
   const success = globalShortcut.register(hotkey, () => {
-    console.log('⌨️  Hotkey triggered!');
+    console.log('⌨️  Toggle HotKey triggered!');
     toggleOverlay();
   });
-  
+  const success2 = globalShortcut.register(hotkey2, () => {
+    console.log('⌨️  Hotkey triggered!');
+    toggleClickThrough();
+  });
+
   if (success) {
     console.log(`✓ Hotkey registered: ${hotkey}\n`);
   } else {
     console.error(`✗ Failed to register hotkey: ${hotkey}\n`);
   }
   
-  console.log('======================================');
-  console.log('✅ APP STARTUP COMPLETE!');
-  console.log('======================================');
-  console.log('Press Ctrl+Shift+A to toggle overlay');
-  console.log('Or double-click the system tray icon');
-  console.log('======================================\n');
+
 });
 
 app.on('window-all-closed', (e) => {
@@ -237,6 +299,3 @@ process.on('uncaughtException', (error) => {
 process.on('unhandledRejection', (error) => {
   console.error('💥 UNHANDLED REJECTION:', error);
 });
-
-console.log('✓ App lifecycle configured');
-console.log('⏳ Waiting for Electron to be ready...\n');
