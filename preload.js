@@ -1,11 +1,8 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-// Expose safe IPC methods to renderer
+// Expose protected methods that allow the renderer process to use
+// the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld('electronAPI', {
-  minimizeOverlay: () => ipcRenderer.invoke('minimize-overlay'),
-  getState: () => ipcRenderer.invoke('get-state'),
-  sendMessage: (message) => ipcRenderer.invoke('send-message', message),
-  toggleFullscreen: () => ipcRenderer.invoke('toggle-fullscreen')  ,
-  setMousePassthrough: (passthrough) => ipcRenderer.invoke('set-mouse-passthrough', passthrough)  
-
+  getSources: () => ipcRenderer.invoke('get-sources'),
+  analyzeText: (text) => ipcRenderer.invoke('analyze-text', text)
 });

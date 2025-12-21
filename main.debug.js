@@ -20,7 +20,9 @@ console.log('======================================\n');
 let tray = null;
 let overlayWindow = null;
 
+let clickThroughEnabled = true;
 
+// Get external display (if connected)      
 
 function getExternalDisplay() {
   const displays = screen.getAllDisplays();
@@ -109,7 +111,7 @@ function createOverlay() {
         preload: path.join(__dirname, 'preload.js')
       }
     });
-    console.log('✓ BrowserWindow created');
+    console.log('✓ BrowserWindow created preload', path.join(__dirname, 'preload.js'));
     
     // Log when page starts loading
     overlayWindow.webContents.on('did-start-loading', () => {
@@ -269,7 +271,11 @@ app.on('ready', () => {
   } else {
     console.error(`✗ Failed to register hotkey: ${hotkey}\n`);
   }
-  
+    if (success2) {
+    console.log(`✓ Hotkey registered: ${hotkey2}\n`);
+  } else {
+    console.error(`✗ Failed to register hotkey: ${hotkey2}\n`);
+  }
 
 });
 

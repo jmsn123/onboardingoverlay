@@ -1,181 +1,258 @@
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: transparent;  /* Fully transparent */
-      overflow: hidden;
-      width: 100vw;
-      height: 100vh;
-    }
-    
-    .overlay-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.1);  /* Slight tint so you can see it */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;  /* This is KEY - makes background click-through */
-    }
-    
-    .chat-container {
-      width: 800px;
-      max-width: 90vw;
-      height: 600px;
-      max-height: 80vh;
-      background: rgba(30, 30, 30, 0.98);
-      backdrop-filter: blur(20px);
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      pointer-events: auto;  /* This is KEY - makes chat clickable */
-    }
-    
-    .header {
-      padding: 20px 30px;
-      background: rgba(40, 40, 40, 0.95);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .title {
-      color: #fff;
-      font-size: 20px;
-      font-weight: 600;
-    }
-    
-    .controls {
-      display: flex;
-      gap: 12px;
-    }
-    
-    .control-btn {
-      width: 36px;
-      height: 36px;
-      border: none;
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-    
-    .control-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    
-    .messages {
-      flex: 1;
-      padding: 30px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    
-    .message {
-      padding: 14px 18px;
-      border-radius: 12px;
-      max-width: 75%;
-      word-wrap: break-word;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-    
-    .message.user {
-      background: rgba(59, 130, 246, 0.2);
-      color: #93c5fd;
-      align-self: flex-end;
-    }
-    
-    .message.assistant {
-      background: rgba(255, 255, 255, 0.1);
-      color: #e5e5e5;
-      align-self: flex-start;
-    }
-    
-    .input-area {
-      padding: 20px 30px;
-      background: rgba(40, 40, 40, 0.95);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .input-container {
-      display: flex;
-      gap: 12px;
-    }
-    
-    #messageInput {
-      flex: 1;
-      padding: 14px 18px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      color: #fff;
-      font-size: 15px;
-      outline: none;
-    }
-    
-    #messageInput:focus {
-      border-color: rgba(59, 130, 246, 0.5);
-      background: rgba(255, 255, 255, 0.08);
-    }
-    
-    #sendBtn {
-      padding: 14px 28px;
-      background: rgba(59, 130, 246, 0.8);
-      border: none;
-      border-radius: 10px;
-      color: #fff;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    
-    #sendBtn:hover {
-      background: rgba(59, 130, 246, 1);
-    }
-    
-    #sendBtn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    
-    .status {
-      padding: 6px 0;
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.4);
-      text-align: center;
-      margin-bottom: 12px;
-    }
-    
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 4px;
-    }
-  
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 10px;
+  color: #333;
+}
+
+.container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-height: calc(100vh - 20px);
+  overflow-y: auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+h1 {
+  font-size: 24px;
+  color: #667eea;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 14px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+}
+
+.btn-success {
+  background: #48bb78;
+  color: white;
+}
+
+.btn-danger {
+  background: #f56565;
+  color: white;
+}
+
+.status {
+  margin-bottom: 20px;
+  padding: 12px;
+  background: #f7fafc;
+  border-radius: 8px;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #cbd5e0;
+  animation: pulse 2s infinite;
+}
+
+.dot.active {
+  background: #48bb78;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+#statusText {
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #2d3748;
+}
+
+.text-box, .suggestions-box {
+  background: #f7fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 15px;
+  min-height: 100px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #2d3748;
+}
+
+.text-box {
+  font-family: 'Courier New', monospace;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.suggestions-box {
+  background: #fef5e7;
+  border-color: #f9e79f;
+}
+
+.suggestions-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.suggestions-box li {
+  padding: 8px 0;
+  border-bottom: 1px solid #f9e79f;
+}
+
+.suggestions-box li:last-child {
+  border-bottom: none;
+}
+
+.suggestions-box li:before {
+  content: "💡 ";
+  margin-right: 8px;
+}
+
+.placeholder {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  color: #667eea;
+}
+
+.source-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.source-item {
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.source-item:hover {
+  border-color: #667eea;
+  background: #f7fafc;
+  transform: scale(1.05);
+}
+
+.source-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.source-item p {
+  font-size: 12px;
+  color: #4a5568;
+  word-wrap: break-word;
+}

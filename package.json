@@ -1,13 +1,17 @@
 {
   "name": "desktop-shell-overlay-mvp",
   "version": "1.0.0",
-  "main": "main.debug.js",
+  "main": "main.js",
   "scripts": {
     "start": "electron .",
     "test": "jest"
   },
   "dependencies": {
-    "electron-store": "^8.2.0"
+    "dotenv": "^17.2.3",
+    "electron-store": "^8.2.0",
+    "openai": "^6.14.0",
+    "pixelmatch": "^5.2.1",
+    "pngjs": "^6.0.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.1.0",

@@ -1,201 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Desktop Assistant</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: transparent;
-      overflow: hidden;
-    }
-    
-    .overlay-container {
-      width: 100vw;
-      height: 100vh;
-      background: rgba(30, 30, 30, 0);
-      backdrop-filter: blur(1px);
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    }
-    
-    .header {
-      padding: 20px 40px;
-      background: rgba(40, 40, 40, 0.8);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      -webkit-app-region: drag;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    .title {
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    
-    .controls {
-      display: flex;
-      gap: 8px;
-      -webkit-app-region: no-drag;
-    }
-    
-    .control-btn {
-      width: 28px;
-      height: 28px;
-      border: none;
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-    
-    .control-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    
-    .messages {
-      flex: 1;
-      padding: 16px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    
-    .message {
-      padding: 10px 14px;
-      border-radius: 8px;
-      max-width: 80%;
-      word-wrap: break-word;
-    }
-    
-    .message.user {
-      background: rgba(59, 130, 246, 0.2);
-      color: #93c5fd;
-      align-self: flex-end;
-    }
-    
-    .message.assistant {
-      background: rgba(255, 255, 255, 0.1);
-      color: #e5e5e5;
-      align-self: flex-start;
-    }
-    
-    .input-area {
-      padding: 16px;
-      background: rgba(40, 40, 40, 0.8);
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    .input-container {
-      display: flex;
-      gap: 8px;
-    }
-    
-    #messageInput {
-      flex: 1;
-      padding: 10px 14px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      color: #fff;
-      font-size: 14px;
-      outline: none;
-    }
-    
-    #messageInput:focus {
-      border-color: rgba(59, 130, 246, 0.5);
-      background: rgba(255, 255, 255, 0.08);
-    }
-    
-    #sendBtn {
-      padding: 10px 20px;
-      background: rgba(59, 130, 246, 0.8);
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    
-    #sendBtn:hover {
-      background: rgba(59, 130, 246, 1);
-    }
-    
-    #sendBtn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    
-    .status {
-      padding: 4px 0;
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.4);
-      text-align: center;
-    }
-    
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 3px;
-    }
-  </style>
+  <title>Interview Assistant</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="overlay-container">
-    <div class="header">
-      <div class="title">🤖 Desktop Assistant</div>
-      <div class="controls">
-        <button class="control-btn" id="minimizeBtn" title="Hide (Ctrl+Shift+A)">−</button>
+  <div class="container">
+    <header>
+      <h1>🎯 Interview Assistant</h1>
+      <p class="subtitle">Your AI-powered interview companion</p>
+    </header>
+
+    <div class="controls">
+      <button id="selectSource" class="btn btn-primary">
+        📺 Select Screen/Window
+      </button>
+      <button id="startCapture" class="btn btn-success" disabled>
+        ▶️ Start Monitoring
+      </button>
+      <button id="stopCapture" class="btn btn-danger" disabled>
+        ⏹️ Stop
+      </button>
+    </div>
+
+    <div class="status">
+      <div class="status-indicator" id="statusIndicator">
+        <span class="dot"></span>
+        <span id="statusText">Ready</span>
       </div>
     </div>
-    
-    <div class="messages" id="messages">
-      <div class="message assistant">
-        Hi! I'm your desktop assistant. Try sending me a message!
+
+    <div class="section">
+      <h3>📝 Detected Content</h3>
+      <div id="capturedText" class="text-box">
+        No content captured yet. Select a source and start monitoring.
       </div>
     </div>
-    
-    <div class="input-area">
-      <div class="status" id="status">Press Ctrl+Shift+A to toggle</div>
-      <div class="input-container">
-        <input 
-          type="text" 
-          id="messageInput" 
-          placeholder="Type a message..."
-          autocomplete="off"
-        />
-        <button id="sendBtn">Send</button>
+
+    <div class="section">
+      <h3>💡 AI Suggestions</h3>
+      <div id="suggestions" class="suggestions-box">
+        <p class="placeholder">AI suggestions will appear here...</p>
       </div>
+    </div>
+
+    <div class="section">
+      <h3>⚙️ Options</h3>
+      <label class="checkbox-label">
+        <input type="checkbox" id="autoRefresh" checked>
+        Auto-refresh every 3 seconds
+      </label>
     </div>
   </div>
 
-  <script src="overlay.js"></script>
+  <!-- Source Selection Modal -->
+  <div id="sourceModal" class="modal">
+    <div class="modal-content">
+      <h2>Select Screen or Window</h2>
+      <div id="sourceList" class="source-list"></div>
+      <button id="closeModal" class="btn">Cancel</button>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
 </body>
 </html>
